@@ -16,7 +16,10 @@ libraryDependencies ++= Seq(
 //  "com.vaadin.addon" % "vaadin-spreadsheet" % "1.1.1",
   "org.vaadin.addons" % "scaladin" % "3.1.0",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
-  "com.typesafe.play" % "play-ws_2.11" % "2.4.6"
+  "com.typesafe.play" % "play-ws_2.11" % "2.4.6",
+//  "org.scalactic" %% "scalactic" % "2.2.6",
+//  "org.scalatest" %% "scalatest" % "2.2.6" % "test",
+  "org.specs2" %% "specs2-core" % "3.7" % "test"
 )
 
 vaadinThemes := Seq("apptheme")
