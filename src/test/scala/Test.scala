@@ -1,51 +1,57 @@
 
+import org.specs2.matcher.MustThrownExpectations
 import org.specs2.mutable._
+import com.ning.http.client.AsyncHttpClientConfig
+import play.api.libs.json._
+import play.api.libs.ws.{WS, WSResponse}
+import play.api.libs.ws.ning.NingWSClient
+//import scala.concurrent.ExecutionContext.Implicits.global
+import org.specs2.concurrent.ExecutionEnv
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
+
+case class LoginResponse(token: Option[String])
 
 
 class TestSpec extends Specification {
-  val ar = List(1, 2, 3, 4, 5)
+  implicit val loginResponseFormat = Json.format[LoginResponse]
 
-  "The list container" should {
-    "have 5 items" in {
-      ar must have size(5)
+  def failed = 0 mustEqual 1
+
+  val timeout = 60000 * 10
+    val builder = new AsyncHttpClientConfig.Builder()
+    val client = new NingWSClient(
+      builder.setConnectTimeout(timeout)
+        .setReadTimeout(timeout)
+        .build()
+    )
+
+
+  "The REST API" should {
+    "Logging in with valid credentials" should {
+      val fut = client.url("http://localhost/api/authenticate/userpass")
+        .withFollowRedirects(follow = true)
+        .withHeaders("Content-Type" -> "application/json")
+        .post( s"""{ "username": "", "password": "" }""")
+
+      val response = Await.result(fut, Duration.Inf)
+      client.close()
+
+      "return OK on call" in {
+        response.status must be equalTo (200)
+      }
+      "have content-type of application/json" in {
+        response.header("Content-type").getOrElse("") must be contain("application/json")
+      }
+      "contain auth token in response" in {
+        Json.parse(response.body).asOpt[LoginResponse].fold(failed) { loginResp =>
+          loginResp.token must beSome
+        }
+      }
+
     }
   }
 
+//  client.close()
 }
-
-
-
-
-
-
-
-//import collection.mutable.Stack
-//import org.scalatest._
-
-//class ExampleSpec extends FlatSpec with Matchers {
-//
-//  "A Stack" should "pop values in last-in-first-out order" in {
-//    val stack = new Stack[Int]
-//    stack.push(1)
-//    stack.push(2)
-//    stack.pop() should be (2)
-//    stack.pop() should be (1)
-//  }
-//
-//  it should "have two items in it when two are pushed" in {
-//    val stack = new Stack[Int]
-//    stack.push(1)
-////    stack.push(2)
-//
-//    stack.size should be (2)
-//  }
-//
-//  it should "throw NoSuchElementException if an empty stack is popped" in {
-//    val emptyStack = new Stack[Int]
-//    a [NoSuchElementException] should be thrownBy {
-//      emptyStack.pop()
-//    }
-//  }
-//
-//
-//}
