@@ -4,7 +4,11 @@ version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.11.7"
 
-resolvers += "Vaadin-addons" at "http://maven.vaadin.com/vaadin-addons"
+resolvers ++= Seq(
+  "eyeWyre Snapshot Repo" at "http://repo.eyewyre.com:8000/repository/snapshots",
+  "eyeWyre Release Repo" at "http://repo.eyewyre.com:8000/repository/releases",
+  "Vaadin-addons" at "http://maven.vaadin.com/vaadin-addons"
+)
 
 libraryDependencies ++= Seq(
   "com.vaadin" % "vaadin-server" % "7.6.0",
@@ -22,8 +26,6 @@ libraryDependencies ++= Seq(
 //  "org.scalatest" %% "scalatest" % "2.2.6" % "test",
   "org.specs2" %% "specs2" % "3.7" % "test"
 )
-
-vaadinThemes := Seq("apptheme")
 
 lazy val root = project.in(file(".")).enablePlugins(JettyPlugin).settings(vaadinWebSettings :_*).settings(
 	javaOptions in compileVaadinWidgetsets := Seq("-Xss8M", "-Xmx512M", "-XX:MaxPermSize=512M"),

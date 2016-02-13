@@ -31,7 +31,7 @@ class AppUI extends UI {
   //  )
 
 
-    val box = new Label("Test") {
+    val box = new Label("") {
       setStyleName("box")
     }
 
@@ -41,7 +41,7 @@ class AppUI extends UI {
       addComponent(new Button("Add") {
         addClickListener(new ClickListener {
           override def buttonClick(clickEvent: ClickEvent): Unit = {
-            val list = List(1,2,3,4)
+            val list = List(1,2,3,4,5,6,7,8)
             val result: List[Int] = list.filter(_ > 2).sortWith((a, b) => b < a)
 
             box.addStyleName("grow")
